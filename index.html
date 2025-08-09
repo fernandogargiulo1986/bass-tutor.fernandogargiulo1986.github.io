@@ -46,12 +46,12 @@
                     <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 2: Tecnica</h2>
                     <p id="part2" class="text-2xl font-semibold text-white">-</p>
                 </div>
-                <!-- Parte 3 -->
+                <!-- Ritmo 1 -->
                 <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
                     <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 3: Ritmo</h2>
                     <p id="part3" class="text-2xl font-semibold text-white">-</p>
                 </div>
-                <!-- Parte 4 -->
+                <!-- Ritmo 2 -->
                 <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
                     <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 4: Ritmo</h2>
                     <p id="part4" class="text-2xl font-semibold text-white">-</p>
@@ -74,7 +74,7 @@
 
         // --- DATI PER LA GENERAZIONE ---
 
-        // Opzioni per la prima e seconda parte (tecnica)
+        // Opzioni per la prima e seconda parte (pattern)
         const a_tecniche = [
             'Arpeggio Ascendente',
             'Arpeggio Discendente',
@@ -86,13 +86,19 @@
         const a_ritmiArpeggio = [
             'Semiminime',
             'Minima e Crome',
-            'Crome e Minima'
+            'Crome e Minima',
+            '3/4 e terzina',
+            'terzina e 3/4',
+            'due crome, minima e semiminima'
         ];
 
         const a_ritmiScala = [
-            'Semiminima e Terzina',
-            'Terzina e Semiminima',
-            'Crome'
+            'Semiminima e Terzina (X2)',
+            'Terzina e Semiminima (X2)',
+            'Crome',
+            'Terzina, due semiminime, terzina',
+            '4 crome, semiminima, tezina',
+            'semiminima, terzina, 4 crome'
         ];
 
         // --- FUNZIONI ---
