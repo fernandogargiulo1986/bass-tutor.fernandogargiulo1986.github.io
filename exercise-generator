@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore Esercizi Basso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation; /* Improves touch responsiveness */
+        }
+        /* Custom style for a subtle button press effect */
+        .btn-press:active {
+            transform: scale(0.98);
+            filter: brightness(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl text-center">
+        <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-400">Generatore di Esercizi</h1>
+            <p class="text-lg text-gray-400">per Basso Elettrico</p>
+        </header>
+
+        <main>
+            <!-- Pulsante per generare l'esercizio -->
+            <button id="generateBtn" class="bg-teal-500 hover:bg-teal-600 text-gray-900 font-bold py-4 px-8 rounded-xl text-xl shadow-lg shadow-teal-500/20 transition-all duration-200 ease-in-out btn-press mb-8 w-full md:w-auto">
+                🔥 Genera Nuovo Esercizio
+            </button>
+
+            <!-- Contenitore per i risultati dell'esercizio -->
+            <div id="exercise-output" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                <!-- Parte 1 -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 1: Tecnica</h2>
+                    <p id="part1" class="text-2xl font-semibold text-white">-</p>
+                </div>
+                <!-- Parte 2 -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 2: Tecnica</h2>
+                    <p id="part2" class="text-2xl font-semibold text-white">-</p>
+                </div>
+                <!-- Parte 3 -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 3: Ritmo</h2>
+                    <p id="part3" class="text-2xl font-semibold text-white">-</p>
+                </div>
+                <!-- Parte 4 -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h2 class="text-sm font-bold text-teal-400 uppercase tracking-wider mb-2">Parte 4: Ritmo</h2>
+                    <p id="part4" class="text-2xl font-semibold text-white">-</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="mt-12 text-gray-500 text-sm">
+            <p>Creato per il tuo studio quotidiano.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- ELEMENTI DEL DOM ---
+        const generateBtn = document.getElementById('generateBtn');
+        const part1El = document.getElementById('part1');
+        const part2El = document.getElementById('part2');
+        const part3El = document.getElementById('part3');
+        const part4El = document.getElementById('part4');
+
+        // --- DATI PER LA GENERAZIONE ---
+
+        // Opzioni per la prima e seconda parte (tecnica)
+        const a_tecniche = [
+            'Arpeggio Ascendente',
+            'Arpeggio Discendente',
+            'Scala Ascendente',
+            'Scala Discendente'
+        ];
+
+        // Opzioni per la terza e quarta parte (ritmo), basate sulla tecnica
+        const a_ritmiArpeggio = [
+            'Semiminime',
+            'Minima e Crome',
+            'Crome e Minima'
+        ];
+
+        const a_ritmiScala = [
+            'Semiminima e Terzina',
+            'Terzina e Semiminima',
+            'Crome'
+        ];
+
+        // --- FUNZIONI ---
+
+        /**
+         * Restituisce un elemento casuale da un array.
+         * @param {Array} arr L'array da cui scegliere.
+         * @returns {*} Un elemento casuale dall'array.
+         */
+        function getRandomElement(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        /**
+         * Genera e visualizza un nuovo esercizio completo.
+         */
+        function generateExercise() {
+            // --- PARTE 1: Genera la prima tecnica ---
+            const part1Value = getRandomElement(a_tecniche);
+
+            // --- PARTE 2: Genera la seconda tecnica (diversa dalla prima) ---
+            // Filtra le opzioni per escludere il valore della parte 1
+            const a_tecnicheFiltrate = a_tecniche.filter(t => t !== part1Value);
+            const part2Value = getRandomElement(a_tecnicheFiltrate);
+
+            // --- PARTE 3: Genera il ritmo per la parte 1 ---
+            let part3Value;
+            // Controlla se la parte 1 è un arpeggio o una scala
+            if (part1Value.toLowerCase().includes('arpeggio')) {
+                part3Value = getRandomElement(a_ritmiArpeggio);
+            } else {
+                part3Value = getRandomElement(a_ritmiScala);
+            }
+
+            // --- PARTE 4: Genera il ritmo per la parte 2 ---
+            let part4Value;
+            // Controlla se la parte 2 è un arpeggio o una scala
+            if (part2Value.toLowerCase().includes('arpeggio')) {
+                part4Value = getRandomElement(a_ritmiArpeggio);
+            } else {
+                part4Value = getRandomElement(a_ritmiScala);
+            }
+            
+            // --- AGGIORNAMENTO INTERFACCIA ---
+            // Aggiorna il testo degli elementi HTML con i valori generati
+            part1El.textContent = part1Value;
+            part2El.textContent = part2Value;
+            part3El.textContent = part3Value;
+            part4El.textContent = part4Value;
+        }
+
+        // --- EVENT LISTENER ---
+        // Associa la funzione generateExercise all'evento click del pulsante
+        generateBtn.addEventListener('click', generateExercise);
+        
+        // Genera un esercizio al caricamento della pagina per non lasciarla vuota
+        window.onload = generateExercise;
+
+    </script>
+</body>
+</html>
