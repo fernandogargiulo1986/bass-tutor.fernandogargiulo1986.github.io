@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Finding</title>
+    <!-- Collegamento a Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Collegamento al tuo foglio di stile personalizzato -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4 antialiased">
+
+    <div class="w-full max-w-md mx-auto text-center">
+        
+        <!-- Titolo dell'applicazione -->
+        <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-200">Note Finding</h1>
+            <p class="text-gray-400">trova la nota sulla corda</p>
+        </header>
+
+        <!-- Area di visualizzazione principale -->
+        <main id="display-area" class="bg-gray-800 rounded-2xl p-8 md:p-12 shadow-2xl w-full h-64 flex flex-col items-center justify-center transition-all duration-300">
+            <div id="note-display" class="text-8xl md:text-9xl font-black text-yellow-400 transition-opacity duration-200 ease-in-out opacity-100">--</div>
+            <div id="string-display" class="text-4xl md:text-5xl font-light text-gray-300 mt-2 transition-opacity duration-200 ease-in-out opacity-100">Corda --</div>
+        </main>
+
+        <!-- Controlli -->
+        <footer class="mt-8 w-full">
+            <div class="flex flex-col items-center gap-6">
+                <!-- Pulsante Avvia / Ferma -->
+                <button id="start-stop-btn" class="w-full max-w-xs bg-emerald-500 hover:bg-emerald-600 text-gray-900 font-bold py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300">
+                    Avvia
+                </button>
+
+                <!-- Slider per l'intervallo -->
+                <div class="w-full max-w-xs">
+                    <label for="interval-slider" class="block text-sm font-medium text-gray-400 mb-2">
+                        Intervallo: <span id="interval-value" class="font-bold text-yellow-400">2.0</span>s
+                    </label>
+                    <input id="interval-slider" type="range" min="0.5" max="4" step="0.2" value="2" class="w-full cursor-pointer">
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Collegamento al tuo file JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
