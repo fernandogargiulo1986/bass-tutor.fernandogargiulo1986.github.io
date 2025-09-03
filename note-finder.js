@@ -1,99 +1,114 @@
-// --- Elementi del DOM ---
-const noteDisplay = document.getElementById('note-display');
-const stringDisplay = document.getElementById('string-display');
-const startStopBtn = document.getElementById('start-stop-btn');
-const intervalSlider = document.getElementById('interval-slider');
-const intervalValue = document.getElementById('interval-value');
+// --- NUOVA STRUTTURA DATI PER LE NOTE ---
 
-// --- Dati ---
-const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-const strings = ["B", "E", "A", "D", "G"]; // 5 corde, copre anche il basso a 4
+// Helper per generare un range cromatico di note nel formato di VexFlow (es. "c#/4")
+function generateNoteRange(startNote, endNote) {
+    const allNotes = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+    const range = [];
 
-// --- Stato dell'applicazione ---
-let timerId = null;
-let isRunning = false;
-let currentInterval = 2000; // Valore di default in millisecondi
+    let [startName, startOctave] = startNote.split('/');
+    let [endName, endOctave] = endNote.split('/');
+    startOctave = parseInt(startOctave);
+    endOctave = parseInt(endOctave);
 
-// --- Funzioni ---
+    let currentIndex = allNotes.indexOf(startName.toLowerCase());
+    let currentOctave = startOctave;
 
-/**
- * Aggiorna la visualizzazione con una nuova nota e corda casuale.
- * Aggiunge un effetto di dissolvenza per una transizione più fluida.
- */
-function updateDisplay() {
-    // Dissolvenza in uscita
-    noteDisplay.style.opacity = '0';
-    stringDisplay.style.opacity = '0';
+    while (currentOctave < endOctave || (currentOctave === endOctave && currentIndex <= allNotes.indexOf(endName.toLowerCase()))) {
+        const note = allNotes[currentIndex];
+        range.push(`${note}/${currentOctave}`);
 
-    setTimeout(() => {
-        // Genera indici casuali
-        const randomNoteIndex = Math.floor(Math.random() * notes.length);
-        const randomStringIndex = Math.floor(Math.random() * strings.length);
-
-        // Aggiorna il testo
-        noteDisplay.textContent = notes[randomNoteIndex];
-        stringDisplay.textContent = `Corda ${strings[randomStringIndex]}`;
-
-        // Dissolvenza in entrata
-        noteDisplay.style.opacity = '1';
-        stringDisplay.style.opacity = '1';
-    }, 150); // Attende un breve istante per creare l'effetto
-}
-
-/**
- * Avvia il timer per l'aggiornamento.
- */
-function startTrainer() {
-    if (isRunning) return; // Non fare nulla se è già in esecuzione
-    
-    isRunning = true;
-    startStopBtn.textContent = 'Ferma';
-    startStopBtn.classList.remove('bg-emerald-500', 'hover:bg-emerald-600', 'focus:ring-emerald-300');
-    startStopBtn.classList.add('bg-rose-500', 'hover:bg-rose-600', 'focus:ring-rose-300');
-
-    updateDisplay(); // Mostra subito la prima combinazione
-    timerId = setInterval(updateDisplay, currentInterval);
-}
-
-/**
- * Ferma il timer e resetta la visualizzazione.
- */
-function stopTrainer() {
-    if (!isRunning) return; // Non fare nulla se è già fermo
-
-    isRunning = false;
-    clearInterval(timerId);
-    timerId = null;
-
-    startStopBtn.textContent = 'Avvia';
-    startStopBtn.classList.remove('bg-rose-500', 'hover:bg-rose-600', 'focus:ring-rose-300');
-    startStopBtn.classList.add('bg-emerald-500', 'hover:bg-emerald-600', 'focus:ring-emerald-300');
-
-    // Resetta la visualizzazione
-    noteDisplay.textContent = '--';
-    stringDisplay.textContent = 'Corda --';
-}
-
-// --- Event Listeners ---
-
-// Gestisce il click sul pulsante Avvia/Ferma
-startStopBtn.addEventListener('click', () => {
-    if (isRunning) {
-        stopTrainer();
-    } else {
-        startTrainer();
+        currentIndex++;
+        if (currentIndex >= allNotes.length) {
+            currentIndex = 0;
+            currentOctave++;
+        }
     }
-});
+    return range;
+}
 
-// Gestisce il cambiamento di valore dello slider
-intervalSlider.addEventListener('input', (e) => {
-    const newIntervalSeconds = parseFloat(e.target.value);
-    currentInterval = newIntervalSeconds * 1000;
-    intervalValue.textContent = newIntervalSeconds.toFixed(1);
+// Definiamo i range per ogni corda del basso
+const stringNotes = {
+    "B": generateNoteRange('b/1', 'g/3'),
+    "E": generateNoteRange('e/2', 'c/4'),
+    "A": generateNoteRange('a/2', 'f/4'),
+    "D": generateNoteRange('d/3', 'a#/4'),
+    "G": generateNoteRange('g/3', 'd#/5')
+};
 
-    // Se il trainer è in esecuzione, riavvialo con il nuovo intervallo
-    if (isRunning) {
-        clearInterval(timerId);
-        timerId = setInterval(updateDisplay, currentInterval);
+// --- FUNZIONI PRINCIPALI ---
+
+// Funzione per mostrare la nota e disegnarla sul pentagramma
+function displayNote(note, stringName) {
+    // Formatta il nome della nota per la visualizzazione (es. da "c#/3" a "C#")
+    const formattedNoteName = note.split('/')[0].toUpperCase();
+
+    // Aggiorna il testo a schermo
+    document.getElementById('note-display').innerText = `Nota: ${formattedNoteName} (Corda: ${stringName})`;
+
+    // Disegna la nota sul pentagramma
+    drawNoteOnStaff(note);
+}
+
+// Funzione principale che genera la nota casuale
+function generateRandomNote() {
+    // 1. Scegli una corda a caso
+    const strings = Object.keys(stringNotes);
+    const randomString = strings[Math.floor(Math.random() * strings.length)];
+
+    // 2. Scegli una nota a caso da quella corda
+    const notesOnString = stringNotes[randomString];
+    const randomNote = notesOnString[Math.floor(Math.random() * notesOnString.length)];
+
+    // 3. Mostra la nota e disegnala
+    displayNote(randomNote, randomString);
+}
+
+// --- FUNZIONE DI DISEGNO VEXFLOW (MODIFICATA) ---
+
+function drawNoteOnStaff(noteWithOctave) {
+    // Pulisce il contenitore prima di disegnare una nuova nota
+    const container = document.getElementById('staff-container');
+    container.innerHTML = '';
+
+    // Inizializza VexFlow
+    const { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } = Vex.Flow;
+    const renderer = new Renderer(container, Renderer.Backends.SVG);
+    renderer.resize(150, 150); // Dimensioni del pentagramma
+    const context = renderer.getContext();
+
+    // Crea il pentagramma con la chiave di basso
+    const stave = new Stave(10, 40, 130);
+    stave.addClef('bass');
+    stave.setContext(context).draw();
+
+    // Crea la nota (la vecchia `noteMap` non serve più!)
+    const note = new StaveNote({
+        keys: [noteWithOctave],
+        duration: "q" // 'q' sta per "quarto" (semiminima)
+    });
+
+    // Aggiunge l'alterazione (diesis '#') se presente nel nome
+    if (noteWithOctave.includes('#')) {
+        note.addModifier(new Accidental("#"));
+    }
+
+    // Crea una "voce" e aggiungi la nota
+    const voice = new Voice({ num_beats: 1, beat_value: 4 });
+    voice.addTickables([note]);
+
+    // Formatta e disegna la voce sul pentagramma
+    new Formatter().joinVoices([voice]).format([voice], 100);
+    voice.draw(context, stave);
+}
+
+// --- EVENT LISTENER ---
+
+// Assicurati che l'event listener per il bottone chiami la funzione corretta
+document.addEventListener('DOMContentLoaded', () => {
+    const generateButton = document.getElementById('generate-button'); // Assicurati che l'ID del bottone sia corretto
+    if (generateButton) {
+        generateButton.addEventListener('click', generateRandomNote);
+        // Genera una nota al caricamento della pagina
+        generateRandomNote();
     }
 });
