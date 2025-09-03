@@ -1,6 +1,15 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
+// Wait for the entire page to load, including external scripts like VexFlow
+window.addEventListener('load', () => {
+
+    // First, check if the VexFlow library has loaded successfully
+    if (typeof Vex === 'undefined' || typeof Vex.Flow === 'undefined') {
+        console.error("VexFlow library not loaded. Please check the script tag in your HTML.");
+        // Display an error message to the user on the page
+        document.getElementById('staff-container').innerHTML = '<p style="color: red; font-size: 0.9em;">Error: Music library (VexFlow) failed to load.</p>';
+        return; // Stop the script if the library is missing
+    }
 
     // --- DOM ELEMENT REFERENCES ---
     const noteDisplay = document.getElementById('note-display');
