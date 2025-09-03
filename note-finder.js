@@ -1,14 +1,11 @@
 'use strict';
 
-// Wait for the entire page to load, including external scripts like VexFlow
 window.addEventListener('load', () => {
 
-    // First, check if the VexFlow library has loaded successfully
     if (typeof Vex === 'undefined' || typeof Vex.Flow === 'undefined') {
         console.error("VexFlow library not loaded. Please check the script tag in your HTML.");
-        // Display an error message to the user on the page
         document.getElementById('staff-container').innerHTML = '<p style="color: red; font-size: 0.9em;">Error: Music library (VexFlow) failed to load.</p>';
-        return; // Stop the script if the library is missing
+        return;
     }
 
     // --- DOM ELEMENT REFERENCES ---
@@ -18,10 +15,12 @@ window.addEventListener('load', () => {
     const intervalValueSpan = document.getElementById('interval-value');
     const startButton = document.getElementById('start-button');
     const stopButton = document.getElementById('stop-button');
+    const viewToggle = document.getElementById('view-toggle');
 
     // --- STATE VARIABLES ---
-    let timerId = null; // Stores the ID of the setInterval timer
-    let currentInterval = parseFloat(intervalSlider.value) * 1000; // Default interval in milliseconds
+    let timerId = null;
+    let currentInterval = parseFloat(intervalSlider.value) * 1000;
+    let currentNoteData = null; // Stores the last generated note object
 
     // --- DATA STRUCTURE FOR BASS STRINGS AND NOTES ---
     function generateNoteRange(startNote, endNote) {
@@ -71,20 +70,56 @@ window.addEventListener('load', () => {
         voice.draw(context, stave);
     }
 
+    // --- UI UPDATE FUNCTIONS ---
+    function displayCurrentNote() {
+        if (!currentNoteData) {
+             // Set initial view state on load
+            if (viewToggle.checked) {
+                staffContainer.style.display = 'flex';
+            } else {
+                staffContainer.style.display = 'none';
+            }
+            return;
+        };
+
+        // Update text display with new structure
+        noteDisplay.innerHTML = `
+            <div class="string-display">Corda <strong>${currentNoteData.string}</strong></div>
+            <div class="note-name-display">${currentNoteData.formatted}</div>
+        `;
+
+        const noteNameElement = document.querySelector('.note-name-display');
+
+        // Update view based on toggle (staff or letter)
+        if (viewToggle.checked) {
+            staffContainer.style.display = 'flex';
+            noteNameElement.classList.add('with-staff');
+            drawNoteOnStaff(currentNoteData.note);
+        } else {
+            staffContainer.style.display = 'none';
+            noteNameElement.classList.remove('with-staff');
+        }
+    }
+
     // --- CORE LOGIC ---
     function generateRandomNote() {
         const strings = Object.keys(stringNotes);
         const randomString = strings[Math.floor(Math.random() * strings.length)];
         const notesOnString = stringNotes[randomString];
         const randomNote = notesOnString[Math.floor(Math.random() * notesOnString.length)];
-        const formattedNoteName = randomNote.split('/')[0].toUpperCase();
-        noteDisplay.innerHTML = `Corda <strong>${randomString}</strong> &mdash; Nota <strong>${formattedNoteName}</strong>`;
-        drawNoteOnStaff(randomNote);
+        
+        currentNoteData = {
+            note: randomNote,
+            string: randomString,
+            formatted: randomNote.split('/')[0].toUpperCase()
+        };
+        
+        displayCurrentNote();
     }
     
     // --- TIMER CONTROL FUNCTIONS ---
     function startAutoGeneration() {
-        if (timerId) return; // Already running
+        if (timerId) return;
         startButton.disabled = true;
         stopButton.disabled = false;
         generateRandomNote(); // Generate one immediately
@@ -92,7 +127,7 @@ window.addEventListener('load', () => {
     }
 
     function stopAutoGeneration() {
-        if (!timerId) return; // Already stopped
+        if (!timerId) return;
         clearInterval(timerId);
         timerId = null;
         startButton.disabled = false;
@@ -104,7 +139,6 @@ window.addEventListener('load', () => {
         currentInterval = seconds * 1000;
         intervalValueSpan.textContent = seconds.toFixed(1);
         
-        // If the timer is running, restart it with the new interval
         if (timerId) {
             clearInterval(timerId);
             timerId = setInterval(generateRandomNote, currentInterval);
@@ -115,8 +149,9 @@ window.addEventListener('load', () => {
     startButton.addEventListener('click', startAutoGeneration);
     stopButton.addEventListener('click', stopAutoGeneration);
     intervalSlider.addEventListener('input', updateInterval);
+    viewToggle.addEventListener('change', displayCurrentNote);
 
-    // Generate the first note on page load for a better initial experience
-    generateRandomNote();
+    // Set initial view state on load
+    displayCurrentNote();
 });
 
