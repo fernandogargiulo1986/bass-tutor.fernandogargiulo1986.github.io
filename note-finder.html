@@ -98,24 +98,45 @@
             padding: 1rem;
             margin: 0 auto 1.5rem auto;
             font-size: 1.2rem;
-            min-height: 50px;
+            min-height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            gap: 0.25rem;
             border: 1px solid var(--border-color);
         }
         
+        .string-display {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-color-secondary);
+        }
+        
+        .note-name-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1;
+            transition: font-size 0.3s ease;
+        }
+        
+        .note-name-display.with-staff {
+            font-size: 1.5rem;
+        }
+
         /* Contenitore per il pentagramma */
         #staff-container {
             background-color: var(--staff-bg);
             border-radius: 8px;
             padding: 10px;
-            margin: 0 auto 2rem auto;
+            margin: 0 auto 2.5rem auto; /* Aumentato margine inferiore */
             width: 170px;
             height: 170px;
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 0.3s ease;
         }
         
         /* Controlli (slider e bottoni) */
@@ -123,6 +144,55 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+        }
+
+        /* Stili per il Toggle Switch */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-color-secondary);
+            font-size: 0.9rem;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
         }
 
         .slider-container {
@@ -163,7 +233,7 @@
             border-radius: 50%;
             background: var(--primary-color);
             cursor: pointer;
-            margin-top: -6px; /* Centra il pallino sulla traccia */
+            margin-top: -6px;
         }
         
         .button-group {
@@ -229,6 +299,15 @@
             <div id="staff-container"></div>
             
             <div class="controls">
+                <div class="toggle-container">
+                    <label for="view-toggle">Lettera</label>
+                    <label class="switch">
+                        <input type="checkbox" id="view-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <label for="view-toggle">Pentagramma</label>
+                </div>
+
                 <div class="slider-container">
                     <label for="interval-slider">
                         Intervallo: <span id="interval-value">2.0</span> secondi
