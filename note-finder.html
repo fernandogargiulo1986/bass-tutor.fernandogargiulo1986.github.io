@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.0/build/cjs/vexflow.js"></script>
 </head>
 <body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4 antialiased">
 
@@ -24,8 +25,9 @@
 
         <!-- Area di visualizzazione principale -->
         <main id="display-area" class="bg-gray-800 rounded-2xl p-8 md:p-12 shadow-2xl w-full h-64 flex flex-col items-center justify-center transition-all duration-300">
-            <div id="note-display" class="text-8xl md:text-9xl font-black text-yellow-400 transition-opacity duration-200 ease-in-out opacity-100">--</div>
             <div id="string-display" class="text-4xl md:text-5xl font-light text-gray-300 mt-2 transition-opacity duration-200 ease-in-out opacity-100">Corda --</div>
+            <div id="note-display" class="text-8xl md:text-9xl font-black text-yellow-400 transition-opacity duration-200 ease-in-out opacity-100">--</div>
+            <div id="staff-container" style="text-align: center; margin-top: 20px;"></div>
         </main>
 
         <!-- Controlli -->
