@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Scale Generator</title>
+    <title>Random Scale & Mode Generator</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -14,20 +14,12 @@
         </div>
 
         <h1>🎲 Scale & Mode Randomizer</h1>
+        <p>Seleziona gradi e modi per generare 4 combinazioni casuali.</p>
 
         <div class="app-controls">
             
             <div class="control-group">
-                <h3>1. Scale Consentite</h3>
-                <div class="checkbox-grid">
-                    <label><input type="checkbox" name="scale" value="major" checked> Maggiore</label>
-                    <label><input type="checkbox" name="scale" value="melodic_minor" checked> Min. Melodica</label>
-                    <label><input type="checkbox" name="scale" value="harmonic_minor" checked> Min. Armonica</label>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <h3>2. Gradi Consentiti</h3>
+                <h3>1. Gradi di Partenza</h3>
                 <div class="checkbox-grid">
                     <label><input type="checkbox" name="degree" value="1" checked> I</label>
                     <label><input type="checkbox" name="degree" value="2" checked> II</label>
@@ -41,10 +33,14 @@
 
             <div class="control-group">
                 <div class="flex-between">
-                    <h3>3. Modi Consentiti</h3>
-                    <button id="toggleModesBtn" style="background:transparent; border:1px solid #555; color:#aaa; cursor:pointer; padding:5px; border-radius:4px;">Seleziona/Deseleziona Tutti</button>
+                    <h3>2. Modi Consentiti</h3>
+                    <button id="toggleModesBtn" style="background:transparent; border:1px solid #555; color:#aaa; cursor:pointer; padding:4px 8px; border-radius:4px; font-size:0.8rem;">
+                        Inverti Selezione
+                    </button>
                 </div>
-                <p style="font-size: 0.8rem; margin-bottom: 10px;">Deseleziona quelli che non vuoi studiare.</p>
+                <p style="font-size: 0.85rem; margin-bottom: 15px; color:#888;">
+                    Scegli quali sonorità includere nel sorteggio.
+                </p>
                 
                 <div class="checkbox-grid" id="modesContainer">
                     </div>

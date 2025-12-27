@@ -1,6 +1,7 @@
 const notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 
-// Definizione dei dati: Chiave Scala -> Array di nomi Modi (in ordine dal I al VII)
+// DATABASE: Mappa ogni scala ai suoi 7 modi in ordine
+// Questo serve ancora per sapere che grado è ogni modo e da che scala deriva (per info)
 const scalesData = {
     major: [
         "Ionian (Maggiore)", "Dorian", "Phrygian", "Lydian", 
@@ -22,27 +23,24 @@ const scaleLabels = {
     harmonic_minor: "Min. Armonica"
 };
 
-// 1. Inizializzazione: Genera i checkbox per tutti i modi possibili
+// --- 1. INIZIALIZZAZIONE ---
 function initModeCheckboxes() {
     const container = document.getElementById('modesContainer');
     const allModes = new Set();
 
-    // Raccogliamo tutti i nomi unici dei modi
     Object.values(scalesData).forEach(modeList => {
         modeList.forEach(mode => allModes.add(mode));
     });
 
-    // Creiamo i checkbox
     allModes.forEach(modeName => {
         const label = document.createElement('label');
-        label.style.fontSize = "0.85rem"; // Un po' più piccolo per farceli stare
-        label.innerHTML = `<input type="checkbox" name="modeFilter" value="${modeName}" checked> ${modeName.split(" ")[0]}`; // Mostra solo la prima parola per brevità nell'UI, ma value è completo
-        label.title = modeName; // Tooltip col nome completo
+        label.style.fontSize = "0.8rem"; 
+        label.innerHTML = `<input type="checkbox" name="modeFilter" value="${modeName}" checked> ${modeName.split(" ")[0]}`; 
+        label.title = modeName;
         container.appendChild(label);
     });
 }
 
-// Gestione "Seleziona tutti/nessuno"
 document.getElementById('toggleModesBtn').addEventListener('click', () => {
     const checkboxes = document.querySelectorAll('input[name="modeFilter"]');
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
@@ -51,34 +49,33 @@ document.getElementById('toggleModesBtn').addEventListener('click', () => {
 
 document.getElementById('generateBtn').addEventListener('click', generateRoutine);
 
-// Funzione Principale
+// --- 2. LOGICA DI GENERAZIONE SEMPLIFICATA ---
 function generateRoutine() {
-    // A. Raccogli i filtri attivi
-    const activeScales = Array.from(document.querySelectorAll('input[name="scale"]:checked')).map(cb => cb.value);
+    // A. Raccogli solo Gradi e Modi (Scale ignorate/rimosse)
     const activeDegrees = Array.from(document.querySelectorAll('input[name="degree"]:checked')).map(cb => parseInt(cb.value));
     const activeModes = Array.from(document.querySelectorAll('input[name="modeFilter"]:checked')).map(cb => cb.value);
 
-    // Validazione base
-    if (activeScales.length === 0 || activeDegrees.length === 0 || activeModes.length === 0) {
-        alert("Seleziona almeno una Scala, un Grado e un Modo!");
+    if (activeDegrees.length === 0 || activeModes.length === 0) {
+        alert("Seleziona almeno un Grado e un Modo.");
         return;
     }
 
-    // B. Costruisci il "Pool" di combinazioni valide
-    // Una combinazione è valida SOLO SE soddisfa tutti e tre i criteri
+    // B. Crea il "Pool" validando su TUTTE le scale disponibili
     let validPool = [];
 
-    activeScales.forEach(scaleKey => {
-        // Per ogni scala attiva, controlliamo i suoi 7 gradi
+    // Iteriamo su tutte le chiavi del database (major, melodic_minor, harmonic_minor)
+    Object.keys(scalesData).forEach(scaleKey => {
         const modesOfThisScale = scalesData[scaleKey];
         
         modesOfThisScale.forEach((modeName, index) => {
-            const degree = index + 1;
+            const degree = index + 1; // 0 = I grado, 1 = II grado...
 
-            // Il grado è attivo? E il nome del modo è attivo?
+            // CRITERIO DI INCLUSIONE:
+            // 1. Il grado del modo è tra quelli scelti?
+            // 2. Il nome del modo è tra quelli scelti?
             if (activeDegrees.includes(degree) && activeModes.includes(modeName)) {
                 validPool.push({
-                    scaleKey: scaleKey,
+                    scaleKey: scaleKey, // Ci serve solo per stampare l'info "Scala Maggiore" sulla card
                     degree: degree,
                     modeName: modeName
                 });
@@ -87,21 +84,18 @@ function generateRoutine() {
     });
 
     if (validPool.length === 0) {
-        alert("Nessuna combinazione trovata! Hai selezionato dei filtri che si escludono a vicenda (es. 'Scala Maggiore' ma solo modo 'Altered').");
+        alert("Nessuna combinazione trovata. Esempio: hai selezionato solo 'I grado' ma solo modi che sono del 'V grado' (come Mixolydian).");
         return;
     }
 
-    // C. Generazione
+    // C. Generazione e Rendering
     const container = document.getElementById('resultsContainer');
     container.innerHTML = "";
     
     for (let i = 0; i < 4; i++) {
-        // Pesca una combinazione valida dal pool
         const combo = validPool[Math.floor(Math.random() * validPool.length)];
-        // Pesca una nota a caso
         const note = notes[Math.floor(Math.random() * notes.length)];
 
-        // Render HTML
         const html = `
             <div class="result-card-mini">
                 <div class="card-header">
@@ -125,5 +119,4 @@ function romanize(num) {
     return lookup[num] || num;
 }
 
-// Avvia setup
 initModeCheckboxes();
