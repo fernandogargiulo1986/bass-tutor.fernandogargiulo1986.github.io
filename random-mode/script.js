@@ -1,7 +1,7 @@
 const notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 
-// DATABASE: Mappa ogni scala ai suoi 7 modi in ordine
-// Questo serve ancora per sapere che grado è ogni modo e da che scala deriva (per info)
+// DATABASE: Mappa ogni scala ai suoi modi.
+// Serve per generare le checkbox e recuperare l'etichetta "Scala Madre" del modo estratto.
 const scalesData = {
     major: [
         "Ionian (Maggiore)", "Dorian", "Phrygian", "Lydian", 
@@ -49,62 +49,54 @@ document.getElementById('toggleModesBtn').addEventListener('click', () => {
 
 document.getElementById('generateBtn').addEventListener('click', generateRoutine);
 
-// --- 2. LOGICA DI GENERAZIONE SEMPLIFICATA ---
+// Helper per trovare la scala madre dato un nome di modo (solo per visualizzazione)
+function getParentScaleLabel(modeName) {
+    for (const [key, modes] of Object.entries(scalesData)) {
+        if (modes.includes(modeName)) {
+            return scaleLabels[key];
+        }
+    }
+    return "";
+}
+
+// --- 2. LOGICA DI GENERAZIONE "TOTAL RANDOM" ---
 function generateRoutine() {
-    // A. Raccogli solo Gradi e Modi (Scale ignorate/rimosse)
+    // A. Raccogli le liste degli elementi attivi
     const activeDegrees = Array.from(document.querySelectorAll('input[name="degree"]:checked')).map(cb => parseInt(cb.value));
     const activeModes = Array.from(document.querySelectorAll('input[name="modeFilter"]:checked')).map(cb => cb.value);
 
+    // B. Controllo se c'è almeno un elemento selezionato per categoria
     if (activeDegrees.length === 0 || activeModes.length === 0) {
         alert("Seleziona almeno un Grado e un Modo.");
         return;
     }
 
-    // B. Crea il "Pool" validando su TUTTE le scale disponibili
-    let validPool = [];
-
-    // Iteriamo su tutte le chiavi del database (major, melodic_minor, harmonic_minor)
-    Object.keys(scalesData).forEach(scaleKey => {
-        const modesOfThisScale = scalesData[scaleKey];
-        
-        modesOfThisScale.forEach((modeName, index) => {
-            const degree = index + 1; // 0 = I grado, 1 = II grado...
-
-            // CRITERIO DI INCLUSIONE:
-            // 1. Il grado del modo è tra quelli scelti?
-            // 2. Il nome del modo è tra quelli scelti?
-            if (activeDegrees.includes(degree) && activeModes.includes(modeName)) {
-                validPool.push({
-                    scaleKey: scaleKey, // Ci serve solo per stampare l'info "Scala Maggiore" sulla card
-                    degree: degree,
-                    modeName: modeName
-                });
-            }
-        });
-    });
-
-    if (validPool.length === 0) {
-        alert("Nessuna combinazione trovata. Esempio: hai selezionato solo 'I grado' ma solo modi che sono del 'V grado' (come Mixolydian).");
-        return;
-    }
-
-    // C. Generazione e Rendering
     const container = document.getElementById('resultsContainer');
     container.innerHTML = "";
     
+    // C. Generazione indipendente
     for (let i = 0; i < 4; i++) {
-        const combo = validPool[Math.floor(Math.random() * validPool.length)];
-        const note = notes[Math.floor(Math.random() * notes.length)];
+        // 1. Pesca una NOTA a caso
+        const randomNote = notes[Math.floor(Math.random() * notes.length)];
+        
+        // 2. Pesca un GRADO a caso (indipendentemente dal modo)
+        const randomDegree = activeDegrees[Math.floor(Math.random() * activeDegrees.length)];
+        
+        // 3. Pesca un MODO a caso (indipendentemente dal grado)
+        const randomMode = activeModes[Math.floor(Math.random() * activeModes.length)];
+
+        // (Opzionale) Recupera il nome della scala madre solo per info visuale
+        const parentScaleName = getParentScaleLabel(randomMode);
 
         const html = `
             <div class="result-card-mini">
                 <div class="card-header">
-                    <span class="note-mini">${note}</span>
-                    <span class="degree-badge">${romanize(combo.degree)}</span>
+                    <span class="note-mini">${randomNote}</span>
+                    <span class="degree-badge">${romanize(randomDegree)}</span>
                 </div>
                 <div class="card-body">
-                    <div class="scale-mini">${scaleLabels[combo.scaleKey]}</div>
-                    <div class="mode-mini">${combo.modeName}</div>
+                    <div class="scale-mini">${parentScaleName}</div>
+                    <div class="mode-mini">${randomMode}</div>
                 </div>
             </div>
         `;
