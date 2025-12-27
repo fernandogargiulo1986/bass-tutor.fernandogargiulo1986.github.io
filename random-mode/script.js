@@ -1,6 +1,5 @@
 const notes = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 
-// Mappa dei modi per ogni tipo di scala
 const modeNames = {
     major: [
         "Ionian (Maggiore)", "Dorian", "Phrygian", "Lydian", 
@@ -18,42 +17,57 @@ const modeNames = {
 
 const scaleLabels = {
     major: "Scala Maggiore",
-    melodic_minor: "Minore Melodica",
-    harmonic_minor: "Minore Armonica"
+    melodic_minor: "Min. Melodica",
+    harmonic_minor: "Min. Armonica"
 };
 
-document.getElementById('generateBtn').addEventListener('click', generateRandom);
+document.getElementById('generateBtn').addEventListener('click', generateRoutine);
 
-function generateRandom() {
-    // 1. Raccogli le opzioni selezionate
+function generateRoutine() {
+    // 1. Raccogli opzioni (una volta sola)
     const selectedScales = Array.from(document.querySelectorAll('input[name="scale"]:checked')).map(cb => cb.value);
     const selectedDegrees = Array.from(document.querySelectorAll('input[name="degree"]:checked')).map(cb => cb.value);
 
-    // Validazione
     if (selectedScales.length === 0 || selectedDegrees.length === 0) {
-        alert("Seleziona almeno una scala e un grado!");
+        alert("Per favore seleziona almeno una scala e un grado.");
         return;
     }
 
-    // 2. Logica Random
-    const randomNote = notes[Math.floor(Math.random() * notes.length)];
-    const randomScaleType = selectedScales[Math.floor(Math.random() * selectedScales.length)];
-    const randomDegree = parseInt(selectedDegrees[Math.floor(Math.random() * selectedDegrees.length)]);
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = ""; // Pulisci i risultati precedenti
+    container.className = "results-grid"; // Applica la classe griglia (definita nel CSS sotto)
 
-    // 3. Recupera il nome del modo
-    // L'array parte da 0, quindi sottraiamo 1 al grado (es. Grado 1 = indice 0)
-    const currentModeName = modeNames[randomScaleType][randomDegree - 1];
+    // 2. Cicla 4 volte per generare 4 esercizi
+    for (let i = 0; i < 4; i++) {
+        // Logica Random
+        const randomNote = notes[Math.floor(Math.random() * notes.length)];
+        const randomScaleType = selectedScales[Math.floor(Math.random() * selectedScales.length)];
+        const randomDegree = parseInt(selectedDegrees[Math.floor(Math.random() * selectedDegrees.length)]);
+        
+        // Calcolo Modo
+        const currentModeName = modeNames[randomScaleType][randomDegree - 1];
 
-    // 4. Aggiorna la UI
-    document.getElementById('rootNote').innerText = randomNote;
-    document.getElementById('scaleName').innerText = scaleLabels[randomScaleType];
-    document.getElementById('degreeNumber').innerText = romanize(randomDegree) + " Grado";
-    document.getElementById('modeName').innerText = currentModeName;
-
-    document.getElementById('result').classList.remove('hidden');
+        // 3. Crea la Card HTML
+        const cardHTML = `
+            <div class="result-card-mini">
+                <div class="card-header">
+                    <span class="note-mini">${randomNote}</span>
+                    <span class="degree-badge">${romanize(randomDegree)}</span>
+                </div>
+                <div class="card-body">
+                    <div class="scale-mini">${scaleLabels[randomScaleType]}</div>
+                    <div class="mode-mini">${currentModeName}</div>
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML += cardHTML;
+    }
+    
+    // Mostra il contenitore (rimuove "hidden" se c'era)
+    container.classList.remove('hidden');
 }
 
-// Helper per numeri romani
 function romanize(num) {
     const lookup = {1:'I', 2:'II', 3:'III', 4:'IV', 5:'V', 6:'VI', 7:'VII'};
     return lookup[num] || num;

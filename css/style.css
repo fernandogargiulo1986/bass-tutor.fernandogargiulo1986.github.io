@@ -338,3 +338,60 @@ input[type="checkbox"]:checked::before {
 .text-center { text-align: center; }
 .mt-4 { margin-top: 1rem; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+/* --- STILE PER I RISULTATI MULTIPLI (Random App) --- */
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adattabile mobile/desktop */
+    gap: 15px;
+    margin-top: 30px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.result-card-mini {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--accent); /* Striscia verde decorativa */
+    border-radius: var(--border-radius);
+    padding: 15px;
+    text-align: left;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+.note-mini {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.degree-badge {
+    background-color: var(--accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.scale-mini {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.mode-mini {
+    font-size: 1.1rem;
+    color: #81c784; /* Verde chiaro */
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 5px;
+}
