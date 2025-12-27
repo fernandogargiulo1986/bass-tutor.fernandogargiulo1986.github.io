@@ -1,0 +1,340 @@
+/* =========================================
+   BASS TUTOR HUB - MASTER STYLE
+   Unificazione di: Home, Randomizer, Pattern, Note Finder
+   ========================================= */
+
+/* Importiamo il font 'Inter' per un look moderno */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+    /* Palette Colori */
+    --bg-dark: #030712;      /* Sfondo profondissimo */
+    --bg-gradient-from: #1f2937; /* Sfumatura superiore */
+    
+    --card-bg: #111827;      /* Sfondo delle card/box */
+    --card-border: #374151;  /* Bordi sottili */
+    
+    --text-main: #f9fafb;    /* Bianco quasi puro */
+    --text-muted: #9ca3af;   /* Grigio medio */
+    
+    --accent: #4CAF50;       /* VERDE PRINCIPALE (Brand Identity) */
+    --accent-hover: #45a049; 
+    --accent-glow: rgba(76, 175, 80, 0.4);
+
+    --danger: #ef4444;       /* Per errori o stop */
+
+    /* Spaziature e Forme */
+    --border-radius: 12px;
+    --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --- CONFIGURAZIONE BASE --- */
+body {
+    font-family: var(--font-stack);
+    /* Sfondo sofisticato preso da pattern-training */
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at top, var(--bg-gradient-from), var(--bg-dark) 60%);
+    background-attachment: fixed; /* Il gradiente resta fisso scrollando */
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent; /* Mobile fix */
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Tipografia */
+h1 { 
+    color: var(--accent); 
+    margin-bottom: 0.5em; 
+    font-weight: 800; 
+    letter-spacing: -0.025em;
+    text-shadow: 0 0 20px var(--accent-glow);
+}
+h2, h3 { color: var(--text-main); margin-top: 0; font-weight: 600; }
+p { color: var(--text-muted); line-height: 1.6; }
+
+/* --- NAVIGAZIONE --- */
+.nav-header {
+    text-align: left;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+}
+
+.back-link:hover { 
+    color: var(--accent); 
+    background: rgba(76, 175, 80, 0.1);
+    transform: translateX(-3px);
+}
+.back-link::before { content: "←"; margin-right: 8px; font-weight: bold; }
+
+/* --- CARD E GRID (Hub Principale) --- */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.app-card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--card-border);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    /* Effetto Lift preso da pattern-training */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    text-decoration: none; /* Se la card stessa è un link */
+    color: inherit;
+}
+
+.app-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border-color: var(--accent);
+}
+
+.app-card h3 { margin-bottom: 10px; color: var(--accent); }
+
+/* --- BOTTONI --- */
+.btn-open, .action-btn {
+    display: inline-block;
+    background-color: var(--accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.btn-open {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    align-self: flex-start;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.action-btn:hover, .btn-open:hover {
+    background-color: var(--accent-hover);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Effetto Pressione (Click) */
+.btn-open:active, .action-btn:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+}
+
+/* --- UI CONTROLS (Input, Checkbox, Sliders) --- */
+
+.app-controls {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--card-border);
+    text-align: left;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.control-group {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 20px;
+}
+.control-group:last-child { border-bottom: none; padding-bottom: 0; }
+
+/* Input Range Slider (Unificato stile Note-Finder ma verde) */
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: var(--card-border);
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    margin: 15px 0;
+}
+input[type=range]:hover { opacity: 1; }
+
+/* Thumb (Pallino dello slider) */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--accent); /* Ora è Verde */
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border: 2px solid #fff;
+}
+input[type=range]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+/* Checkbox Custom (Stile Pattern-Training adattato) */
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+/* Nascondiamo la checkbox nativa ma manteniamo l'accessibilità */
+label { 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 8px;
+    user-select: none;
+}
+
+/* Applicare la classe "custom-checkbox" agli input checkbox per avere lo stile */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--bg-dark);
+    margin-right: 0.75rem;
+    color: currentColor;
+    width: 1.4em;
+    height: 1.4em;
+    border: 1px solid var(--card-border);
+    border-radius: 0.35em;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    border-color: var(--text-muted);
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.8em;
+    height: 0.8em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--accent); /* Check verde */
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:checked {
+    border-color: var(--accent);
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+/* Input Tempo (Style Pattern-Training) */
+.tempo-input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--card-border);
+    width: 100px;
+    color: var(--accent);
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    transition: border-color 0.2s;
+}
+.tempo-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Lock Button (Lucchetto) */
+.lock-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 5px;
+}
+.lock-btn:hover { color: var(--text-main); transform: scale(1.1); }
+.lock-btn.locked { color: var(--accent); } /* Diventa verde quando bloccato */
+
+/* --- RISULTATI E ANIMAZIONI --- */
+.result-box {
+    background-color: var(--card-bg); /* Uniformato */
+    padding: 30px;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--accent);
+    margin-top: 30px;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.15);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.big-note { 
+    font-size: 5rem; 
+    color: var(--accent); 
+    margin: 0; 
+    line-height: 1; 
+    font-weight: 800;
+}
+
+.scale-detail { font-size: 1.5rem; margin: 15px 0; font-weight: 600; }
+.mode-detail { color: #81c784; font-style: italic; font-size: 1.2rem; }
+
+.hidden { display: none; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utilities */
+.text-center { text-align: center; }
+.mt-4 { margin-top: 1rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }

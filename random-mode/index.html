@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Scale Generator</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="nav-header">
+            <a href="../index.html" class="back-link">Torna all'Hub</a>
+        </div>
+
+        <h1>🎲 Scale & Mode Randomizer</h1>
+
+        <div class="app-controls">
+            
+            <div class="control-group">
+                <h3>1. Tipo di Scala</h3>
+                <label><input type="checkbox" name="scale" value="major" checked> Maggiore</label>
+                <label><input type="checkbox" name="scale" value="melodic_minor" checked> Minore Melodica</label>
+                <label><input type="checkbox" name="scale" value="harmonic_minor" checked> Minore Armonica</label>
+            </div>
+
+            <div class="control-group">
+                <h3>2. Grado di Partenza</h3>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox" name="degree" value="1" checked> I</label>
+                    <label><input type="checkbox" name="degree" value="2" checked> II</label>
+                    <label><input type="checkbox" name="degree" value="3" checked> III</label>
+                    <label><input type="checkbox" name="degree" value="4" checked> IV</label>
+                    <label><input type="checkbox" name="degree" value="5" checked> V</label>
+                    <label><input type="checkbox" name="degree" value="6" checked> VI</label>
+                    <label><input type="checkbox" name="degree" value="7" checked> VII</label>
+                </div>
+            </div>
+
+            <button id="generateBtn" class="action-btn">Genera Esercizio</button>
+        </div>
+
+        <div id="result" class="result-box hidden">
+            <h2 class="big-note" id="rootNote">C</h2>
+            <h3 id="scaleName">Scala Maggiore</h3>
+            <p>Parti dal grado: <strong id="degreeNumber" style="color:white">V</strong></p>
+            <p>Modo: <span id="modeName" style="color: #4CAF50; font-style: italic;">Mixolydian</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
