@@ -18,14 +18,16 @@
         <div class="app-controls">
             
             <div class="control-group">
-                <h3>1. Tipo di Scala</h3>
-                <label><input type="checkbox" name="scale" value="major" checked> Maggiore</label>
-                <label><input type="checkbox" name="scale" value="melodic_minor" checked> Minore Melodica</label>
-                <label><input type="checkbox" name="scale" value="harmonic_minor" checked> Minore Armonica</label>
+                <h3>1. Scale Consentite</h3>
+                <div class="checkbox-grid">
+                    <label><input type="checkbox" name="scale" value="major" checked> Maggiore</label>
+                    <label><input type="checkbox" name="scale" value="melodic_minor" checked> Min. Melodica</label>
+                    <label><input type="checkbox" name="scale" value="harmonic_minor" checked> Min. Armonica</label>
+                </div>
             </div>
 
             <div class="control-group">
-                <h3>2. Grado di Partenza</h3>
+                <h3>2. Gradi Consentiti</h3>
                 <div class="checkbox-grid">
                     <label><input type="checkbox" name="degree" value="1" checked> I</label>
                     <label><input type="checkbox" name="degree" value="2" checked> II</label>
@@ -37,11 +39,22 @@
                 </div>
             </div>
 
-            <button id="generateBtn" class="action-btn">Genera Esercizio</button>
+            <div class="control-group">
+                <div class="flex-between">
+                    <h3>3. Modi Consentiti</h3>
+                    <button id="toggleModesBtn" style="background:transparent; border:1px solid #555; color:#aaa; cursor:pointer; padding:5px; border-radius:4px;">Seleziona/Deseleziona Tutti</button>
+                </div>
+                <p style="font-size: 0.8rem; margin-bottom: 10px;">Deseleziona quelli che non vuoi studiare.</p>
+                
+                <div class="checkbox-grid" id="modesContainer">
+                    </div>
+            </div>
+
+            <button id="generateBtn" class="action-btn">Genera 4 Esercizi</button>
         </div>
 
-    	<div id="resultsContainer" class="hidden">
-    	</div>
+        <div id="resultsContainer" class="results-grid hidden">
+            </div>
     </div>
 
     <script src="script.js"></script>
